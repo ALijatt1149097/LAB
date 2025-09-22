@@ -79,8 +79,8 @@ for (int i=1; temp != NULL; i++){
         //Insertion at beginning funciton
     Node* temp = new Node();
     temp->data=10;
-    temp->next = head;
-    head= temp;
+    temp->next = Head;
+    Head= temp;
     }else{
         int check = 1;
     temp = Head;
