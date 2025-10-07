@@ -1,0 +1,131 @@
+1. Insertion Variants
+
+Write a program to insert a node before a given value in a singly linked list.
+
+Insert a new node after every even-valued node in a linked list.
+
+Insert a node after every k nodes in a linked list.
+
+Create a linked list from an array of integers dynamically.
+
+Insert a node in a linked list such that the list remains sorted after insertion.
+
+Write a program to insert multiple nodes at once using user input until -1 is entered.
+
+Write a program to insert a node between two nodes if their sum is greater than a given number.
+
+Insert a node at the second last position of a linked list.
+
+Insert nodes at both ends alternatively (front, back, front, back...).
+
+Insert a node into a circular linked list so the list remains sorted.
+
+🗑️ 2. Deletion Variants
+
+Delete all nodes whose data value is greater than a given number.
+
+Delete the second node of every consecutive pair.
+
+Delete the middle node of a linked list (if even, delete second of the two middles).
+
+Delete all nodes having duplicate values completely (not just consecutive).
+
+Delete every kth node from the linked list.
+
+Delete nodes in the linked list having data less than their next node’s data.
+
+Delete nodes having data greater than their next node’s data.
+
+Delete all nodes except the first and last.
+
+Delete all nodes from the linked list that appear more than once.
+
+Delete all nodes in a circular linked list that have odd values.
+
+🔍 3. Searching, Counting & Analysis
+
+Search and return the position of the last occurrence of a given value.
+
+Count the number of prime numbers in a linked list.
+
+Count how many nodes contain palindromic numbers.
+
+Count and print all nodes at even and odd positions separately.
+
+Count the number of nodes before a specific key value.
+
+Count the total number of unique elements in the list.
+
+Search whether the linked list is sorted or not.
+
+Search and display the frequency of each unique element in a linked list.
+
+Write a function to find the nth node from the end.
+
+Find and print the sum of alternate nodes in the linked list.
+
+🔄 4. Modification / Transformation
+
+Replace all negative numbers with 0 in a linked list.
+
+Swap the data of first and last node in the list.
+
+Swap every pair of adjacent nodes.
+
+Rearrange nodes so that all even elements appear before odd ones.
+
+Rearrange nodes so that data in alternate nodes are swapped.
+
+Reverse only the first half of the linked list.
+
+Reverse the linked list in groups of k.
+
+Make a deep copy (clone) of a linked list using pointers.
+
+Split the linked list into two separate lists: one for even values, one for odd values.
+
+Convert a singly linked list to a circular linked list.
+
+🌀 5. Circular Linked List Specific
+
+Create a circular linked list and display elements 3 times (to show looping).
+
+Search whether a given value exists in a circular linked list.
+
+Insert a node after every odd-valued node in a circular linked list.
+
+Delete the head node in a circular linked list and make the next node new head.
+
+Delete the last node of a circular linked list.
+
+Count the number of nodes in a circular linked list without infinite looping.
+
+Find the length of the circular linked list using two pointers.
+
+Split a circular linked list into two equal halves.
+
+Merge two circular linked lists into a single one.
+
+Implement a Circular Doubly Linked List and perform insertion & deletion at both ends.
+
+💥 6. Creative / Exam-Style Challenges
+
+Write a function that deletes every node that has a duplicate immediately before or after it.
+
+Write a function to check if a linked list is palindrome using pointers.
+
+Write a function to rotate a linked list by k nodes (move first k nodes to end).
+
+Write a function to swap k-th node from start and k-th node from end.
+
+Write a function to find intersection point of two linked lists (common node).
+
+Write a program to detect and remove a cycle in a linked list (Floyd’s algorithm).
+
+Write a function to sum two numbers represented by linked lists (e.g., 234 + 789).
+
+Write a function to remove duplicate nodes from an unsorted linked list.
+
+Write a program to compare two linked lists for equality.
+
+Write a program to concatenate two linked lists.
