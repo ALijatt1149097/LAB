@@ -7,6 +7,7 @@ struct Node {
     char grades;
     int marks;
     Node* next;
+    Node(const string& n, char g, int m) : name(n), grades(g), marks(m), next(nullptr) {}
 };
 
 void display(Node* head) {
