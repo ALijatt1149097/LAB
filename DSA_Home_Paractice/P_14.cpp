@@ -183,18 +183,69 @@ void insertatmiddle(int a){
         temp->next = newNode;
     }
 }
+
+
 Node* search(x);
 {
-    
-}
-void deleteallnodes>x(){
     if(isempty())
+    return NULL;
+    else 
     {
-        cout<<"list is empty";
+        Node* temp= head;
+        while (temp!= NULL && temp->data !=x){
+            temp= temp->next;
+        }
+        if (temp==NULL)
+        {
+            cout<<"Not Found";
+        }
+        else 
+        return temp;
+    }
+}
+
+
+
+void deleteAllGreaterthanx(int x) {
+    Node* temp = head;
+    Node* prev = NULL;
+
+    // remove from start if needed
+    while (head != NULL && head->data > x) {
+        temp = head;
+        head = head->next;
+        delete temp;
+    }
+
+    temp = head;
+    while (temp != NULL) {
+        if (temp->next != NULL && temp->next->data > x) {
+            Node* del = temp->next;
+            temp->next = temp->next->next;
+            delete del;
+        } else {
+            temp = temp->next;
+        }
+    }
+}
+
+void deleteSecondOfPairs() {
+    // if list is empty or has only one node, do nothing
+    if (head == NULL || head->next == NULL) {
+        cout << "List is too short to delete pairs." << endl;
         return;
     }
 
+    Node* temp = head;
+
+    while (temp != NULL && temp->next != NULL) {
+        Node* del = temp->next;      // second node of the pair
+        temp->next = del->next;      // skip the deleted node
+        delete del;                  // free memory
+        temp = temp->next;           // move to the next pair
+    }
 }
+
 
 
 
