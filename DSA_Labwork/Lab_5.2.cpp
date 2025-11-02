@@ -1,187 +1,216 @@
-
 #include <iostream>
 using namespace std;
 
 struct Node {
+    int rollNo;
     string name;
-    char grades;
     int marks;
     Node* next;
-    Node(const string& n, char g, int m) : name(n), grades(g), marks(m), next(nullptr) {}
+    
 };
 
-void display(Node* head) {
-    if (!head) {
-        cout << "(empty)\n";
-        return;
-    }
-    cout << head->name << ":" << head->grades << "," << head->marks;
-    for (Node* temp = head->next; temp; temp = temp->next) {
-        cout << " | " << temp->name << ":" << temp->grades << "," << temp->marks;
-    }
-    cout << '\n';
+/* Insert at end */
+void insertEnd(Node*& head, int roll, const string& name, int marks) {
+    Node* n = new Node(roll, name, marks);
+    if (!head) { head = n; return; }
+    Node* p = head;
+    while (p->next) p = p->next;
+    p->next = n;
 }
 
-
-// Insert at end (handles empty list)
-void insertAtEnd(Node*& head, const string& name, char grade, int marks) {
-    Node* node = new Node(name, grade, marks);
-    if (!head) { head = node; return; }
-    Node* temp = head;
-    while (temp->next) temp = temp->next;
-    temp->next = node;
+/* Insert at beginning */
+void insertBegin(Node*& head, int roll, const string& name, int marks) {
+    Node* n = new Node(roll, name, marks);
+    n->next = head;
+    head = n;
 }
 
-// Insert at a 1-based position. If position > length+1, appends at end.
-void insertNodeAtPosition(Node*& head, const string& name, char grade, int marks, int position) {
-    if (position <= 1 || !head) { // insert at head (also works for empty list)
-        Node* node = new Node(name, grade, marks);
-        node->next = head;
-        head = node;
-        return;
+/* Search by rollNo; returns pointer or nullptr */
+Node* searchByRoll(Node* head, int roll) {
+    while (head) {
+        if (head->rollNo == roll) return head;
+        head = head->next;
     }
-
-    Node* temp = head;
-    for (int i = 1; temp && i < position - 1; ++i) {
-        if (!temp->next) break; // will append at end
-        temp = temp->next;
-    }
-    Node* node = new Node(name, grade, marks);
-    node->next = temp->next;
-    temp->next = node;
+    return nullptr;
 }
 
-// Update marks by name (first match)
-bool updateMarks(Node* head, const string& nameTo, int newMarks) {
-    for (Node* t = head; t; t = t->next) {
-        if (t->name == nameTo) { t->marks = newMarks; return true; }
-    }
-    return false;
+/* Update marks by rollNo; returns true if updated */
+bool updateMarks(Node* head, int roll, int newMarks) {
+    Node* s = searchByRoll(head, roll);
+    if (!s) return false;
+    s->marks = newMarks;
+    return true;
 }
 
-// Delete node at 1-based position
-bool deleteNode(Node*& head, int position) {
-    if (!head || position < 1) return false;
-    if (position == 1) {
+/* Delete by rollNo; returns true if deleted */
+bool deleteByRoll(Node*& head, int roll) {
+    if (!head) return false;
+    if (head->rollNo == roll) {
         Node* del = head;
         head = head->next;
         delete del;
         return true;
     }
     Node* prev = head;
-    for (int i = 1; prev && i < position - 1; ++i) prev = prev->next;
-    if (!prev || !prev->next) return false; // out of range
-    Node* del = prev->next;
-    prev->next = del->next;
-    delete del;
+    Node* cur = head->next;
+    while (cur && cur->rollNo != roll) {
+        prev = cur;
+        cur = cur->next;
+    }
+    if (!cur) return false;
+    prev->next = cur->next;
+    delete cur;
     return true;
 }
 
-// Case-insensitive helper for name compare
-bool iequals(const string& a, const string& b) {
-    if (a.size() != b.size()) return false;
-    for (size_t i = 0; i < a.size(); ++i)
-        if (tolower(static_cast<unsigned char>(a[i])) != tolower(static_cast<unsigned char>(b[i])))
-            return false;
-    return true;
+/* Display all students */
+void displayAll(Node* head) {
+    if (!head) { cout << "No records.\n"; return; }
+    cout << "Students:\n";
+    while (head) {
+        cout << "Roll: " << head->rollNo
+             << ", Name: " << head->name
+             << ", Marks: " << head->marks << '\n';
+        head = head->next;
+    }
 }
 
-// Search by category: 1=Name, 2=Grades, 3=Marks
-const Node* searchByCategory(const Node* head, int choice, const string& searchdata) {
-    const Node* t = head;
-    if (choice == 1) {
-        while (t) { if (iequals(t->name, searchdata)) return t; t = t->next; }
-    } else if (choice == 2) {
-        if (searchdata.size() != 1) return nullptr;
-        char g = searchdata[0];
-        while (t) { if (t->grades == g) return t; t = t->next; }
-    } else if (choice == 3) {
-        try {
-            int m = stoi(searchdata);
-            while (t) { if (t->marks == m) return t; t = t->next; }
-        } catch (...) { return nullptr; }
+/* Display student with maximum marks */
+void displayMax(Node* head) {
+    if (!head) { cout << "No records.\n"; return; }
+    Node* best = head;
+    head = head->next;
+    while (head) {
+        if (head->marks > best->marks) best = head;
+        head = head->next;
     }
-    return nullptr;
+    cout << "Topper -> Roll: " << best->rollNo
+         << ", Name: " << best->name
+         << ", Marks: " << best->marks << '\n';
 }
 
-// Generic search (string key) across name/grade/marks
-const Node* searchAnyDataInNode(const Node* head, const string& key) {
-    const Node* t = head;
-    while (t) {
-        if (iequals(t->name, key)) return t;
-        if (key.size() == 1 && t->grades == key[0]) return t;
-        try { if (t->marks == stoi(key)) return t; } catch (...) {}
-        t = t->next;
-    }
-    return nullptr;
+/* Count total students */
+int countStudents(Node* head) {
+    int c = 0;
+    while (head) { ++c; head = head->next; }
+    return c;
 }
 
-int main() {
-    // Seed list
-    Node* head = nullptr;
-    insertAtEnd(head, "Ali",   'A', 90);
-    insertAtEnd(head, "Abid",  'B', 80);
-
-    // Insert at positions
-    insertNodeAtPosition(head, "Ahmed", 'C', 70, 2);
-    insertNodeAtPosition(head, "Basit", 'B', 77, 3); // <- fixed missing semicolon
-
-    cout << "Initial list:\n";
-    display(head);
-
-    // Search by option
-    int choice;
-    cout << "Search by (1) Name (2) Grades (3) Marks: ";
-    if (!(cin >> choice)) return 0;
-
-    cout << "Enter the search value: ";
-    string key;
-    cin >> key;
-
-    if (const Node* found = searchByCategory(head, choice, key)) {
-        cout << "Found: " << found->name << ", " << found->grades << ", " << found->marks << '\n';
-    } else {
-        cout << "Not Found\n";
-    }
-
-    // Update marks
-    cout << "Enter the name of the student you want to update and new marks: ";
-    string nameToUpdate; int upmarks;
-    cin >> nameToUpdate >> upmarks;
-    if (updateMarks(head, nameToUpdate, upmarks)) {
-        cout << "Marks updated.\n";
-    } else {
-        cout << "Student not found.\n";
-    }
-
-    // Insert at end
-    cout << "Enter name, grade, marks to insert at the end: ";
-    string nameEnd; char gradeEnd; int marksEnd;
-    cin >> nameEnd >> gradeEnd >> marksEnd;
-    insertAtEnd(head, nameEnd, gradeEnd, marksEnd);
-
-    // Insert at beginning
-    cout << "Enter name, grade, marks to insert at the beginning: ";
-    string nameBeg; char gradeBeg; int marksBeg;
-    cin >> nameBeg >> gradeBeg >> marksBeg;
-    insertNodeAtPosition(head, nameBeg, gradeBeg, marksBeg, 1);
-
-    // Optional: delete an element
-    cout << "Enter a position to delete (or 0 to skip): ";
-    int posDel; cin >> posDel;
-    if (posDel > 0) {
-        if (deleteNode(head, posDel)) cout << "Deleted.\n";
-        else cout << "Invalid position.\n";
-    }
-
-    cout << "Final list:\n";
-    display(head);
-
-    // Cleanup (free all nodes)
+/* Free entire list */
+void freeList(Node*& head) {
     while (head) {
         Node* nxt = head->next;
         delete head;
         head = nxt;
     }
+}
+
+/* Input helpers */
+int readInt(const string& prompt) {
+    cout << prompt;
+    int x;
+    while (!(cin >> x)) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Invalid. Try again: ";
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // flush line
+    return x;
+}
+
+string readLine(const string& prompt) {
+    cout << prompt;
+    string s;
+    getline(cin, s);
+    return s;
+}
+
+int main() {
+    Node* head = nullptr;
+
+    while (true) {
+        cout << "\n--- Student Records Menu ---\n";
+        cout << "1. Insert at end\n";
+        cout << "2. Insert at beginning\n";
+        cout << "3. Delete by roll number\n";
+        cout << "4. Search by roll number\n";
+        cout << "5. Update marks\n";
+        cout << "6. Display all students\n";
+        cout << "7. Display student with maximum marks\n";
+        cout << "8. Count total students\n";
+        cout << "9. Exit\n";
+        cout << "Enter choice: ";
+
+        int choice;
+        if (!(cin >> choice)) {
+            cout << "Goodbye.\n";
+            break;
+        }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // flush line
+
+        if (choice == 9) break;
+
+        int roll, marks;
+        string name;
+
+        switch (choice) {
+            case 1:
+                roll = readInt("Roll: ");
+                name = readLine("Name: ");
+                marks = readInt("Marks: ");
+                insertEnd(head, roll, name, marks);
+                cout << "Inserted at end.\n";
+                break;
+
+            case 2:
+                roll = readInt("Roll: ");
+                name = readLine("Name: ");
+                marks = readInt("Marks: ");
+                insertBegin(head, roll, name, marks);
+                cout << "Inserted at beginning.\n";
+                break;
+
+            case 3:
+                roll = readInt("Enter roll to delete: ");
+                cout << (deleteByRoll(head, roll) ? "Deleted.\n" : "Not found.\n");
+                break;
+
+            case 4: {
+                roll = readInt("Enter roll to search: ");
+                Node* s = searchByRoll(head, roll);
+                if (s) {
+                    cout << "Found -> Roll: " << s->rollNo
+                         << ", Name: " << s->name
+                         << ", Marks: " << s->marks << '\n';
+                } else {
+                    cout << "Not found.\n";
+                }
+                break;
+            }
+
+            case 5:
+                roll = readInt("Enter roll to update: ");
+                marks = readInt("Enter new marks: ");
+                cout << (updateMarks(head, roll, marks) ? "Updated.\n" : "Not found.\n");
+                break;
+
+            case 6:
+                displayAll(head);
+                break;
+
+            case 7:
+                displayMax(head);
+                break;
+
+            case 8:
+                cout << "Total students = " << countStudents(head) << '\n';
+                break;
+
+            default:
+                cout << "Invalid choice.\n";
+        }
+    }
+
+    freeList(head);
     return 0;
 }
